@@ -1,4 +1,4 @@
-import {PlusIcon, ThumbUpIcon, XIcon } from "@heroicons/react/solid"
+import {PlusIcon, ThumbUpIcon, XIcon } from "@heroicons/react/outline"
 import MuiModal from "@mui/material/Modal"
 import { useEffect, useState } from "react"
 import { FaPlay } from "react-icons/fa"
@@ -66,16 +66,16 @@ console.log(trailer)
           <div className="absolute bottom-10 flex w-full items-center justify-between px-10">
             <div className="flex space-x-2">
                 <button className="flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]">
-                <FaPlay className="h-9 w-5 text-black" />
+                <FaPlay className="h-7 w-5 text-black" />
                     Play
                 </button>
 
-                <button className="modalButton">
-                    <PlusIcon className="h-7 w-7 "/>
-                </button>
+               <button className="modalButton">
+                    <PlusIcon className="h-7 w-7" />
+               </button>
 
                 <button className="modalButton">
-                    <ThumbUpIcon className="h-7 w-7 "/>
+                    <ThumbUpIcon className="h-7 w-7" />
                 </button>
 
 
