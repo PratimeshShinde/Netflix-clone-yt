@@ -1,11 +1,11 @@
-import {PlusIcon, ThumbUpIcon, XIcon } from "@heroicons/react/outline"
+import {PlusIcon, ThumbUpIcon, VolumeOffIcon, VolumeUpIcon, XIcon } from "@heroicons/react/outline"
 import MuiModal from "@mui/material/Modal"
 import { useEffect, useState } from "react"
 import { FaPlay } from "react-icons/fa"
 import ReactPlayer from "react-player"
 import { useRecoilState } from "recoil"
 import { modalState, movieState } from "../atoms/ModalAtom"
-import {Element} from "../typings"
+import {Element, Genre} from "../typings"
 
 function Modal() {
 const [showModal, setShowModal] = useRecoilState(modalState)
@@ -77,10 +77,38 @@ console.log(trailer)
                 <button className="modalButton">
                     <ThumbUpIcon className="h-7 w-7" />
                 </button>
-
-
             </div>
+
+            <button className="modalButton" onClick={() => setMuted(!muted)}>
+                {muted ? (
+                <VolumeOffIcon className="h-7 w-7" />
+                ) : (
+                <VolumeUpIcon className="h-7 w-7" />)}
+            </button>
+
           </div>
+        </div>
+
+        <div>
+            <div>
+                <div className="flex items-center space-x-2 text-sm">
+                    <p className="font-semibold text-green-400">{movie!.vote_average * 10}% Match
+                    </p>
+                    <p className="font-light ">{movie?.release_date || movie?.first_air_date}</p>
+                    <div className="flex h-4 items-center justify-center rounded border border-white/40 px-1.5 text-sm">
+                    HD
+                    </div>
+                </div>
+
+                <div>
+                    <p className="w-5/6">{movie?.overview}</p>
+                    <div>
+                        <div>
+                            {/* genre */}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         </>
     </MuiModal>
