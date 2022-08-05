@@ -1,5 +1,4 @@
 import {BellIcon, SearchIcon} from '@heroicons/react/solid'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 

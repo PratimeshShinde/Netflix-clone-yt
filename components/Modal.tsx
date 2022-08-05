@@ -11,7 +11,7 @@ function Modal() {
 const [showModal, setShowModal] = useRecoilState(modalState)
 const [movie, setMovie] = useRecoilState(movieState)
 const [trailer, setTrailer] = useState('')
-const [genres, setGenres] = useState<Genre[]>()
+const [genres, setGenres] = useState<Genre[]>([])
 const [muted, setMuted] = useState(false)
 
 useEffect(() => {
@@ -56,7 +56,7 @@ console.log(trailer)
         
         <div className="relative pt-[56.25%]">
         <ReactPlayer
-            url={`https://www.youtube.com/watch?v=${trailer}`}
+            url={`https://www.youtube.com/watch?v=${trailer}` || `images\This-video-is-unavailable-on-YouTube.png`}
             width="100%"
             height="100%"
             style={{ position: 'absolute', top: '0', left: '0' }}
@@ -89,8 +89,8 @@ console.log(trailer)
           </div>
         </div>
 
-        <div>
-            <div>
+        <div className="flex space-x-16 rounded-b-md bg-[#181818] px-10 py-8">
+            <div className="space-y-6 text-lg">
                 <div className="flex items-center space-x-2 text-sm">
                     <p className="font-semibold text-green-400">{movie!.vote_average * 10}% Match
                     </p>
@@ -100,12 +100,24 @@ console.log(trailer)
                     </div>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-x-10 gap-y-4 font-light md:flex-row">
                     <p className="w-5/6">{movie?.overview}</p>
                     <div>
-                        <div>
-                            {/* genre */}
+                        <div className="flex flex-col space-y-2 text-sm">
+                            <span className="text-[grey]">Genres: </span>
+                            {genres.map((genre) => genre.name).join(',')}
                         </div>
+
+                        <div>
+                            <span className="text-[grey]">Original Language: </span>
+                            {movie?.original_language}
+                        </div>
+
+                        <div>
+                            <span className="text-[grey]">Total Votes: </span>
+                            {movie?.vote_count}
+                        </div>
+
                     </div>
                 </div>
             </div>
