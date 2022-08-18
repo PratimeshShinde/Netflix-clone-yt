@@ -1,111 +1,113 @@
 import {
-    createUserWithEmailAndPassword,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    signOut,
-    User,
-  } from 'firebase/auth'
-  
-  import { useRouter } from 'next/router'
-  import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-  import { auth } from '../firebase'
-  
-  interface IAuth {
-    user:User | null
-    signUp: (email:string, password: string) => Promise<void>
-    signIn: (email:string, password: string) => Promise<void>
-    logout: () => Promise<void>
-    error: String | null
-    loading: boolean
-  }
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  User,
+} from "firebase/auth";
 
-  const AuthContext = createContext<IAuth>({
-    user: null,
-    signUp: async () => {},
-    signIn: async () => {},
-    logout: async () => {},
-    error: null,
-    loading: false,
-  })
+import { useRouter } from "next/router";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { auth } from "../firebase";
 
-  interface AuthProviderProps {
-    children: React.ReactNode
-  }
+interface IAuth {
+  user: User | null;
+  signUp: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  error: String | null;
+  loading: boolean;
+}
 
-export const AuthProvider = ({children}:AuthProviderProps) => {    
-    const [loading, setLoading] = useState(false)
-    const [user, setUser] = useState<User | null>(null)
-    const [error, setError] = useState(null)
-    const [initialLoading, setInitialLoading] = useState(true)
-    const router = useRouter()
+const AuthContext = createContext<IAuth>({
+  user: null,
+  signUp: async () => {},
+  signIn: async () => {},
+  logout: async () => {},
+  error: null,
+  loading: false,
+});
 
-    // Persisting the User_
-    useEffect(
-      () =>
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState(null);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const router = useRouter();
+
+  // Persisting the User_
+  useEffect(
+    () =>
       onAuthStateChanged(auth, (user) => {
         if (user) {
           // logged is..
-          setUser(user)
-          setLoading(false)
+          setUser(user);
+          setLoading(false);
         } else {
           // Not logged in
-          setUser(null)
-          setLoading(true)
-          router.push('/login')
+          setUser(null);
+          setLoading(true);
+          router.push("/login");
         }
 
-        setInitialLoading(false)
+        setInitialLoading(false);
       }),
-      [auth]
-    )
-    
-    const signUp = async (email: string, password: string) => {
-        setLoading(true)
+    [auth]
+  );
 
-        await createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-            setUser(userCredential.user)
-            router.push('/')
-            setLoading(false)
-           }
-        ).catch((error) => alert(error.massage))
-        .finally(() => setLoading(false))
-    }
+  const signUp = async (email: string, password: string) => {
+    setLoading(true);
 
-    const signIn = async (email: string, password: string) => {
-        setLoading(true)
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setUser(userCredential.user);
+        router.push("/");
+        setLoading(false);
+      })
+      .catch((error) => alert(error.massage))
+      .finally(() => setLoading(false));
+  };
 
-        await signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-            setUser(userCredential.user)
-            router.push('/')
-            setLoading(false)
-           }
-        ).catch((error) => alert(error.massage))
-        .finally(() => setLoading(false))
-    }
+  const signIn = async (email: string, password: string) => {
+    setLoading(true);
 
-    const logout = async () => {
-        setLoading(true)
+    await signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setUser(userCredential.user);
+        router.push("/");
+        setLoading(false);
+      })
+      .catch((error) => alert(error.massage))
+      .finally(() => setLoading(false));
+  };
 
-        signOut(auth).then(() => {
-            setUser(null)
-        })
-        .catch((error) => alert(error.massage))
-        .finally(() => setLoading(false))
-    }
-    
-    const memoedValue = useMemo(
-      () => ({ user, signUp, signIn, error, loading, logout }),
-      [user, loading, error]
-    )
-  
+  const logout = async () => {
+    setLoading(true);
+
+    signOut(auth)
+      .then(() => {
+        setUser(null);
+      })
+      .catch((error) => alert(error.massage))
+      .finally(() => setLoading(false));
+  };
+
+  const memoedValue = useMemo(
+    () => ({ user, signUp, signIn, error, loading, logout }),
+    [user, loading, error]
+  );
 
   return (
     <AuthContext.Provider value={memoedValue}>
       {!initialLoading && children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
 export default function useAuth() {
-    return useContext(AuthContext)
+  return useContext(AuthContext);
 }

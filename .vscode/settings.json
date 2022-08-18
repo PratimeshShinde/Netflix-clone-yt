@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
         "Firestore"
-    ]
+    ],
+    "liveServer.settings.wait": 1500
 }
